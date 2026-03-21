@@ -33,13 +33,8 @@ Thumbs.db
 dist/
 build/
 
-data/
 
 en_US-ryan-high.onnx
 en_US-ryan-high.onnx.json
 package-lock.json
-chroma_db/
-Multi_bot.png
-expense.png
-rag.png
-travel_agent.png
+chroma_db/
