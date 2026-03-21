@@ -42,20 +42,22 @@ This project introduces a **multi-agent orchestration system** that:
 - Provides train and flight information  
 - Uses external tools via MCP  
 - Handles route planning and travel queries  
-![Travel Agent Demo](travel_agent.png)
+![Travel Agent Demo](<img width="1907" height="912" alt="travel_agent" src="https://github.com/user-attachments/assets/877ac1a0-7b7a-410d-a967-dd755c0ab95f" />)
 
 ### 💰 Bot 2 — Expense Tracker Agent
 - Add, update, delete expenses  
 - Category-based tracking  
 - Query expenses with filters  
 - Structured database interactions  
-![Expense Tracker Agent Demo](expense.png)
+![Expense Tracker Agent Demo](<img width="1920" height="1080" alt="expense" src="https://github.com/user-attachments/assets/161e8efc-b0fe-44a9-937b-9aa1470cfa54" />
+)
 
 ### 📚 Bot 3 — RAG Agent
 - Retrieval-Augmented Generation  
 - Answers queries from industry documents  
 - Context-aware knowledge retrieval  
-![RAG Agent Demo](rag.png)
+![RAG Agent Demo](<img width="1920" height="1080" alt="rag" src="https://github.com/user-attachments/assets/243c4778-b187-479d-8cbc-929a4ea5ad60" />
+)
 
 
 ### 🧠 Bot 4 — Multi-Agent Supervisor (Orchestrator)
@@ -63,7 +65,8 @@ This project introduces a **multi-agent orchestration system** that:
 - Routes queries to appropriate agents  
 - Supports multi-step reasoning  
 - Can use multiple agents for a single query  
-![Multi-Agent Supervisor Demo](Multi_bot.png)
+![Multi-Agent Supervisor Demo](<img width="1920" height="1080" alt="Multi_bot" src="https://github.com/user-attachments/assets/e9b06aa6-4527-467d-84f6-d599498b6cea" />
+)
 
 ## ⚙️ Key Features
 
