@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi Agent Orchestration</title>
+    <meta name="description" content="Chat with 4 intelligent AI agents in one place.">
+    <link rel="stylesheet" href="frontend.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- ═══════════════════════ LANDING ═══════════════════════ -->
+<div id="landing-view" class="view-section active">
+    <div class="landing-glow"></div>
+    <div class="landing-content">
+        <div class="landing-logo">
+            <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
+                <rect width="52" height="52" rx="16" fill="url(#g1)"/>
+                <path d="M14 26h7l4-9 5 18 4-11 4 2" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <defs>
+                    <linearGradient id="g1" x1="0" y1="0" x2="52" y2="52">
+                        <stop offset="0%" stop-color="#6366f1"/>
+                        <stop offset="100%" stop-color="#a855f7"/>
+                    </linearGradient>
+                </defs>
+            </svg>
+        </div>
+        <h1>Multi Agent Orchestration</h1>
+        <p>Interact with four intelligent AI agents — each with its own memory and conversation history.</p>
+        <div class="agent-pills">
+            <span class="pill p1">✈️ Travel Agent</span>
+            <span class="pill p2">💰 Expense Tracker</span>
+            <span class="pill p3">📚 Info RAG</span>
+            <span class="pill p4">🤖 Multi Bot</span>
+        </div>
+        <div class="landing-btns">
+            <button class="btn btn-primary" onclick="showAuth('login')">Login</button>
+            <button class="btn btn-ghost"   onclick="showAuth('signup')">Sign Up</button>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════ AUTH ═══════════════════════ -->
+<div id="auth-view" class="view-section hidden">
+    <div class="auth-card">
+        <button class="back-btn" onclick="backToLanding()">← Back</button>
+        <svg width="36" height="36" viewBox="0 0 52 52" fill="none" style="margin-bottom:.5rem">
+            <rect width="52" height="52" rx="16" fill="url(#g2)"/>
+            <path d="M14 26h7l4-9 5 18 4-11 4 2" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <defs><linearGradient id="g2" x1="0" y1="0" x2="52" y2="52"><stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#a855f7"/></linearGradient></defs>
+        </svg>
+        <h2 id="auth-title">Login</h2>
+        <p class="auth-sub" id="auth-sub">Welcome back! Enter your credentials.</p>
+        <form id="auth-form" onsubmit="handleAuth(event)">
+            <div class="field">
+                <label for="username">Username</label>
+                <input type="text" id="username" required placeholder="Enter your username" autocomplete="username">
+            </div>
+            <div class="field">
+                <label for="password">Password</label>
+                <input type="password" id="password" required placeholder="Enter your password" autocomplete="current-password">
+            </div>
+            <div id="auth-error" class="alert hidden"></div>
+            <button type="submit" class="btn btn-primary full" id="auth-submit">Login</button>
+        </form>
+    </div>
+</div>
+
+<!-- ═══════════════════════ APP ═══════════════════════ -->
+<div id="app-view" class="view-section hidden">
+
+    <!-- Top bar — always visible -->
+    <header class="topbar">
+        <div class="topbar-brand">
+            <svg width="24" height="24" viewBox="0 0 52 52" fill="none">
+                <rect width="52" height="52" rx="16" fill="url(#g3)"/>
+                <path d="M14 26h7l4-9 5 18 4-11 4 2" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <defs><linearGradient id="g3" x1="0" y1="0" x2="52" y2="52"><stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#a855f7"/></linearGradient></defs>
+            </svg>
+            <span>Multi Agent</span>
+        </div>
+
+        <nav class="bot-tabs" role="tablist">
+            <button class="bot-tab active" id="tab-bot1" data-bot="bot1" onclick="switchBot('bot1')" role="tab" aria-selected="true">
+                <span>✈️</span> Travel Agent
+            </button>
+            <button class="bot-tab" id="tab-bot2" data-bot="bot2" onclick="switchBot('bot2')" role="tab" aria-selected="false">
+                <span>💰</span> Expense Tracker
+            </button>
+            <button class="bot-tab" id="tab-bot3" data-bot="bot3" onclick="switchBot('bot3')" role="tab" aria-selected="false">
+                <span>📚</span> Info RAG
+            </button>
+            <button class="bot-tab" id="tab-bot4" data-bot="bot4" onclick="switchBot('bot4')" role="tab" aria-selected="false">
+                <span>🤖</span> Multi Bot
+            </button>
+        </nav>
+
+        <div class="topbar-right">
+            <div class="user-chip" id="user-chip">User</div>
+            <button class="btn-logout" onclick="logout()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                Logout
+            </button>
+        </div>
+    </header>
+
+    <!-- ── BOT PAGES ── each bot has its own sidebar + chat area ── -->
+    <div class="pages-container">
+
+        <!-- BOT 1 : Travel Agent -->
+        <div class="bot-page active" id="page-bot1" data-bot="bot1">
+            <aside class="sidebar">
+                <div class="sidebar-top">
+                    <div class="sidebar-label">
+                        <span class="s-icon">✈️</span>
+                        <span class="s-name">Travel Agent</span>
+                    </div>
+                    <button class="new-chat-btn" onclick="createNewChat('bot1')">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        New Chat
+                    </button>
+                </div>
+                <div class="chat-list-label">History</div>
+                <div class="chat-list" id="list-bot1"></div>
+            </aside>
+            <section class="chat-pane">
+                <div class="messages" id="msgs-bot1">
+                    <div class="empty-state">
+                        <div class="e-icon">✈️</div>
+                        <h3>Travel Agent</h3>
+                        <p>Create a new chat or pick one from the sidebar.</p>
+                    </div>
+                </div>
+                <div class="typing-row hidden" id="typing-bot1">
+                    <div class="typing-dots"><span></span><span></span><span></span></div>
+                    <span class="typing-lbl">Travel Agent is thinking…</span>
+                </div>
+                <div class="input-bar">
+                    <div class="input-wrap" id="wrap-bot1">
+                        <textarea id="input-bot1" placeholder="Message Travel Agent…" disabled rows="1"
+                            onkeydown="handleKey(event,'bot1')" oninput="grow(this)"></textarea>
+                        <button class="send-btn" id="send-bot1" disabled onclick="sendMessage('bot1')">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                        </button>
+                    </div>
+                    <div class="input-hint">Enter to send · Shift+Enter for new line</div>
+                </div>
+            </section>
+        </div>
+
+        <!-- BOT 2 : Expense Tracker -->
+        <div class="bot-page" id="page-bot2" data-bot="bot2">
+            <aside class="sidebar">
+                <div class="sidebar-top">
+                    <div class="sidebar-label">
+                        <span class="s-icon">💰</span>
+                        <span class="s-name">Expense Tracker</span>
+                    </div>
+                    <button class="new-chat-btn" onclick="createNewChat('bot2')">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        New Chat
+                    </button>
+                </div>
+                <div class="chat-list-label">History</div>
+                <div class="chat-list" id="list-bot2"></div>
+            </aside>
+            <section class="chat-pane">
+                <div class="messages" id="msgs-bot2">
+                    <div class="empty-state">
+                        <div class="e-icon">💰</div>
+                        <h3>Expense Tracker</h3>
+                        <p>Create a new chat or pick one from the sidebar.</p>
+                    </div>
+                </div>
+                <div class="typing-row hidden" id="typing-bot2">
+                    <div class="typing-dots"><span></span><span></span><span></span></div>
+                    <span class="typing-lbl">Expense Tracker is thinking…</span>
+                </div>
+                <div class="input-bar">
+                    <div class="input-wrap" id="wrap-bot2">
+                        <textarea id="input-bot2" placeholder="Message Expense Tracker…" disabled rows="1"
+                            onkeydown="handleKey(event,'bot2')" oninput="grow(this)"></textarea>
+                        <button class="send-btn" id="send-bot2" disabled onclick="sendMessage('bot2')">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                        </button>
+                    </div>
+                    <div class="input-hint">Enter to send · Shift+Enter for new line</div>
+                </div>
+            </section>
+        </div>
+
+        <!-- BOT 3 : Info RAG -->
+        <div class="bot-page" id="page-bot3" data-bot="bot3">
+            <aside class="sidebar">
+                <div class="sidebar-top">
+                    <div class="sidebar-label">
+                        <span class="s-icon">📚</span>
+                        <span class="s-name">Info RAG</span>
+                    </div>
+                    <button class="new-chat-btn" onclick="createNewChat('bot3')">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        New Chat
+                    </button>
+                </div>
+                <div class="chat-list-label">History</div>
+                <div class="chat-list" id="list-bot3"></div>
+            </aside>
+            <section class="chat-pane">
+                <div class="messages" id="msgs-bot3">
+                    <div class="empty-state">
+                        <div class="e-icon">📚</div>
+                        <h3>Info RAG</h3>
+                        <p>Create a new chat or pick one from the sidebar.</p>
+                    </div>
+                </div>
+                <div class="typing-row hidden" id="typing-bot3">
+                    <div class="typing-dots"><span></span><span></span><span></span></div>
+                    <span class="typing-lbl">Info RAG is thinking…</span>
+                </div>
+                <div class="input-bar">
+                    <div class="input-wrap" id="wrap-bot3">
+                        <textarea id="input-bot3" placeholder="Message Info RAG…" disabled rows="1"
+                            onkeydown="handleKey(event,'bot3')" oninput="grow(this)"></textarea>
+                        <button class="send-btn" id="send-bot3" disabled onclick="sendMessage('bot3')">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                        </button>
+                    </div>
+                    <div class="input-hint">Enter to send · Shift+Enter for new line</div>
+                </div>
+            </section>
+        </div>
+
+        <!-- BOT 4 : Multi Bot -->
+        <div class="bot-page" id="page-bot4" data-bot="bot4">
+            <aside class="sidebar">
+                <div class="sidebar-top">
+                    <div class="sidebar-label">
+                        <span class="s-icon">🤖</span>
+                        <span class="s-name">Multi Bot</span>
+                    </div>
+                    <button class="new-chat-btn" onclick="createNewChat('bot4')">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        New Chat
+                    </button>
+                </div>
+                <div class="chat-list-label">History</div>
+                <div class="chat-list" id="list-bot4"></div>
+            </aside>
+            <section class="chat-pane">
+                <div class="messages" id="msgs-bot4">
+                    <div class="empty-state">
+                        <div class="e-icon">🤖</div>
+                        <h3>Multi Bot</h3>
+                        <p>Create a new chat or pick one from the sidebar.</p>
+                    </div>
+                </div>
+                <div class="typing-row hidden" id="typing-bot4">
+                    <div class="typing-dots"><span></span><span></span><span></span></div>
+                    <span class="typing-lbl">Multi Bot is thinking…</span>
+                </div>
+                <div class="input-bar">
+                    <div class="input-wrap" id="wrap-bot4">
+                        <textarea id="input-bot4" placeholder="Message Multi Bot…" disabled rows="1"
+                            onkeydown="handleKey(event,'bot4')" oninput="grow(this)"></textarea>
+                        <button class="send-btn" id="send-bot4" disabled onclick="sendMessage('bot4')">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                        </button>
+                    </div>
+                    <div class="input-hint">Enter to send · Shift+Enter for new line</div>
+                </div>
+            </section>
+        </div>
+
+    </div><!-- /pages-container -->
+</div><!-- /app-view -->
+
+<script src="frontend.js"></script>
+</body>
+</html>
