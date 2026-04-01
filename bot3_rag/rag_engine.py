@@ -2,7 +2,7 @@ import os
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from langchain_huggingface import HuggingFaceEmbeddings
-from bot1_LG_MCP.resources.llms import bot3_llm
+from bot1_LG_MCP.resources.llms import bot3_llm,llm_groq
 from langchain_core.messages import HumanMessage, AIMessage
 from langgraph.graph import StateGraph, START, END, MessagesState
 from langchain_community.vectorstores import Chroma
@@ -36,7 +36,6 @@ def retrieve(query: str) -> str:
 
     return f"Relevant context:\n{context}"
 
-
 class AgentState(MessagesState):
     pass
 
@@ -49,7 +48,6 @@ async def build_graph():
     async def llm_node(state: AgentState):
         messages = state["messages"]
 
-        # 🛡️ BULLETPROOFING: Clean orphans
         cleaned_messages = []
         from langchain_core.messages import AIMessage, ToolMessage
         for i, msg in enumerate(messages):

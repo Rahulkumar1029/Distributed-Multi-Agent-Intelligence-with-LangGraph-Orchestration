@@ -37,4 +37,6 @@ build/
 en_US-ryan-high.onnx
 en_US-ryan-high.onnx.json
 package-lock.json
-chroma_db/
+chroma_db/
+data/
+notebooks/
