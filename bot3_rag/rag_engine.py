@@ -8,7 +8,8 @@ from langgraph.graph import StateGraph, START, END, MessagesState
 from langchain_community.vectorstores import Chroma
 from langchain_core.tools import tool
 from langgraph.prebuilt import ToolNode, tools_condition
-from langgraph.checkpoint.memory import InMemorySaver
+#from langgraph.checkpoint.memory import InMemorySaver
+
 
 PERSIST_DIR = "chroma_db"
 
@@ -80,9 +81,9 @@ async def build_graph():
     )
 
     builder.add_edge("tools", "llm")
-    checkpointer=InMemorySaver()
+    #checkpointer=InMemorySaver()
 
-    graph = builder.compile(checkpointer=checkpointer)
+    graph = builder.compile()
 
     return graph
 

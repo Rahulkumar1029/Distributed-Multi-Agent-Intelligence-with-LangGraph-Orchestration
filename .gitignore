@@ -40,3 +40,4 @@ package-lock.json
 chroma_db/
 data/
 notebooks/
+.langgraph_api/

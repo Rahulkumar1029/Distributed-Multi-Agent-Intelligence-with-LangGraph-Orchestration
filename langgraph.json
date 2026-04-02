@@ -1,0 +1,8 @@
+{
+  "dependencies": ["."],
+  "graphs": {
+    "bot3_rag": "langgraph_dev:graph_bot3",
+    "bot1_LG_MCP": "langgraph_dev:graph_bot1"
+  },  
+  "env": ".env"
+}
